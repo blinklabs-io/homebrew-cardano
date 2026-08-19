@@ -7,7 +7,6 @@ class Dingo < Formula
   url "https://github.com/blinklabs-io/dingo/archive/refs/tags/v0.69.0.tar.gz"
   sha256 "fd1145dd9ce4a231eaa734f9adb394e5a6a7cd66377079c6300cf7c4e8244801"
   license "Apache-2.0"
-  head "https://github.com/blinklabs-io/dingo.git", branch: "main"
 
   depends_on "go" => :build
 
