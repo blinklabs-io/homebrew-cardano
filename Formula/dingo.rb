@@ -4,13 +4,10 @@
 class Dingo < Formula
   desc "Cardano data node built in Go"
   homepage "https://github.com/blinklabs-io/dingo"
+  url "https://github.com/blinklabs-io/dingo/archive/496e923edc08b59e496378181af7739f6d96aa18.tar.gz"
   version "0.69.0"
+  sha256 "85f2a2e48f3b601c758e4a9aa67be302b4128ad14c1dc993df4ef93c3b90b610"
   license "Apache-2.0"
-
-  bottle do
-    root_url "https://github.com/blinklabs-io/homebrew-cardano/releases/download/dingo-0.69.0"
-    sha256 cellar: :any_skip_relocation, arm64_linux: "fc0e99b11bb53b69c98b958a42b640514366bfaeb48f564c30edea9299adf5bf"
-  end
 
   on_macos do
     on_arm do
