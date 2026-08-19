@@ -4,36 +4,35 @@
 class Dingo < Formula
   desc "Cardano data node built in Go"
   homepage "https://github.com/blinklabs-io/dingo"
-  url "https://github.com/blinklabs-io/dingo/archive/496e923edc08b59e496378181af7739f6d96aa18.tar.gz"
-  sha256 "85f2a2e48f3b601c758e4a9aa67be302b4128ad14c1dc993df4ef93c3b90b610"
+  url "https://github.com/blinklabs-io/dingo/archive/refs/tags/v0.69.0.tar.gz"
+  sha256 "fd1145dd9ce4a231eaa734f9adb394e5a6a7cd66377079c6300cf7c4e8244801"
   license "Apache-2.0"
+  head "https://github.com/blinklabs-io/dingo.git", branch: "main"
 
-  on_macos do
-    on_arm do
-      url "https://github.com/blinklabs-io/dingo/releases/download/v0.69.0/dingo-v0.69.0-darwin-arm64.tar.gz?download=1"
-      sha256 "a52684871205d3ce00d1a51167274ba0bbed0e6d14352d65a5162957b93c7af2"
-    end
-    on_intel do
-      disable! date: "2026-08-19", because: :unsupported
-    end
-  end
-
-  on_linux do
-    on_intel do
-      url "https://github.com/blinklabs-io/dingo/releases/download/v0.69.0/dingo-v0.69.0-linux-amd64.tar.gz?download=1"
-      sha256 "2562f11a9c4029d1b4ccef53186639014e0611a44b59d15b260fe0d0621acfd1"
-    end
-    on_arm do
-      url "https://github.com/blinklabs-io/dingo/releases/download/v0.69.0/dingo-v0.69.0-linux-arm64.tar.gz?download=1"
-      sha256 "33485531cda790cdf5118e970de505566c9efda020dc0c5a40127acde510c71d"
-    end
-  end
+  depends_on "go" => :build
 
   def install
-    bin.install "dingo"
+    # Mirror upstream's Makefile build: CGO-free, the default
+    # dingo_extra_plugins tag, and a stamped version package so
+    # "dingo version" reports the release instead of "devel".
+    # A release tarball carries no git metadata, so the tag's commit is
+    # recorded here and must be updated alongside the url.
+    ENV["CGO_ENABLED"] = "0"
+    ldflags = %W[
+      -s -w
+      -X github.com/blinklabs-io/dingo/internal/version.Version=v#{version}
+      -X github.com/blinklabs-io/dingo/internal/version.CommitHash=496e923e
+    ]
+    system "go", "build", *std_go_args(ldflags:, tags: "dingo_extra_plugins"), "./cmd/dingo"
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/dingo version")
+    # The version package must be stamped: an unstamped build reports
+    # "devel (commit )" and an unstamped commit leaves the hash empty.
+    assert_match(/\Av#{Regexp.escape(version.to_s)} \(commit [0-9a-f]{7,40}\)\z/,
+                 shell_output("#{bin}/dingo version").strip)
+
+    # An unknown subcommand must fail rather than start a node.
+    assert_match "unknown command", shell_output("#{bin}/dingo not-a-command 2>&1", 1)
   end
 end
