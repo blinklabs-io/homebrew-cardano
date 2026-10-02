@@ -4,8 +4,8 @@
 class Dingo < Formula
   desc "Cardano data node built in Go"
   homepage "https://github.com/blinklabs-io/dingo"
-  url "https://github.com/blinklabs-io/dingo/archive/refs/tags/v0.74.1.tar.gz"
-  sha256 "d6165e4e56076d939a6cdb91820b0bd4678256df443109cce8269794733965d2"
+  url "https://github.com/blinklabs-io/dingo/archive/refs/tags/v0.75.1.tar.gz"
+  sha256 "026a57f37108e24680d024abe6bff13536c68db49b874ca220afc6aca3ac3e6e"
   license "Apache-2.0"
 
   depends_on "go" => :build
@@ -20,7 +20,7 @@ class Dingo < Formula
     ldflags = %W[
       -s -w
       -X github.com/blinklabs-io/dingo/internal/version.Version=v#{version}
-      -X github.com/blinklabs-io/dingo/internal/version.CommitHash=a43ae98
+      -X github.com/blinklabs-io/dingo/internal/version.CommitHash=6ae8c08
     ]
     system "go", "build", *std_go_args(ldflags:, tags: "dingo_extra_plugins"), "./cmd/dingo"
   end
