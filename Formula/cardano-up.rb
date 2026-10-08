@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 class CardanoUp < Formula
-  desc "Command line utility for managing Cardano services for local development"
+  desc "Command-line utility for managing Cardano services for local development"
   homepage "https://github.com/blinklabs-io/cardano-up"
   url "https://github.com/blinklabs-io/cardano-up/archive/refs/tags/v0.17.0.tar.gz"
   sha256 "a3f61b175781f07090a4ef9ca99ce11857c6b7706cc67fdd54de38544ed79af4"
